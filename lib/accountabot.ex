@@ -29,6 +29,9 @@ defmodule Accountabot.Consumer do
 
   alias Nostrum.Consumer
   alias Nostrum.Api
+  alias Nostrum.Struct.Interaction
+
+  alias Accountabot.Commands
 
   def start_link() do
     Consumer.start_link(__MODULE__)
@@ -41,11 +44,17 @@ defmodule Accountabot.Consumer do
     register_commands(guild.id)
   end
 
+  def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
+    case interaction.data.name do
+      "register" -> Commands.Register.create(interaction)
+    end
+  end
+
   def handle_event(_event) do
     :noop
   end
 
-  def register_commands(guild_id) do
-    Api.create_guild_application_command(guild_id, Commands.register())
+  defp register_commands(guild_id) do
+    Api.create_guild_application_command(guild_id, Commands.Create.register())
   end
 end

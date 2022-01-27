@@ -1,4 +1,4 @@
-defmodule Commands do
+defmodule Accountabot.Commands.Create do
   def register do
     %{
       name: "register",
@@ -120,5 +120,35 @@ defmodule Commands do
         }
       ]
     }
+  end
+end
+
+defmodule Accountabot.Commands.Response do
+  alias Nostrum.Struct.Interaction
+
+  @doc """
+  Directs an interaction to the appropriate behaviour
+  """
+  @callback create(Interaction) :: {:ok}
+end
+
+defmodule Accountabot.Commands.Register do
+  @behaviour Accountabot.Commands.Response
+
+  def create(interaction) do
+    case interaction.data.options do
+      [%{name: "purchase"}] -> register_purchase(interaction)
+      [%{name: "prediction"}] -> register_prediction(interaction)
+    end
+  end
+
+  defp register_purchase(interaction) do
+    IO.inspect(interaction)
+    IO.puts("purchase")
+  end
+
+  defp register_prediction(interaction) do
+    IO.inspect(interaction)
+    IO.puts("prediction")
   end
 end
