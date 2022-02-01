@@ -29,7 +29,6 @@ defmodule Accountabot.Consumer do
 
   alias Nostrum.Consumer
   alias Nostrum.Api
-  alias Nostrum.Struct.Interaction
 
   alias Accountabot.Commands
 
