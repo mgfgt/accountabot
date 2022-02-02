@@ -17,6 +17,7 @@ defmodule Accountabot.Supervisor do
   @impl true
   def init(:ok) do
     children = [
+     Accountabot.Repo,
       {Accountabot.Consumer, name: Accountabot.Consumer}
     ]
 

@@ -150,6 +150,8 @@ defmodule Accountabot.Commands.Register do
   alias Nostrum.Struct.Guild.Member
   alias Nostrum.Struct.User
 
+  alias Accountabot.UserContext
+
   def create(interaction) do
     case interaction.data.options do
       [%{name: "purchase"}] -> register_purchase(interaction)
@@ -177,7 +179,14 @@ defmodule Accountabot.Commands.Register do
   end
 
   defp register_prediction(interaction) do
-    member = %Member{user: %User{id: interaction.user.id}}
+    user_id = interaction.user.id
+    user = case UserContext.get_user(user_id) do
+      nil ->
+        UserContext.new_user(user_id, interaction.user.username, interaction.user.discriminator)
+      user -> user
+    end
+
+    member = %Member{user: %User{id: user_id}}
 
     [command] = interaction.data.options
     options = Enum.reduce(command.options, %{}, fn (x, acc) -> Map.put(acc, x.name, x) end)
